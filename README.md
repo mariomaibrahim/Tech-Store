@@ -1,16 +1,24 @@
-# cosmatics_shopping
+📱💻 Flutter Store App
 
-A new Flutter project.
+A simple Flutter app for a laptop & mobile store.
+Built as a practice project to improve Flutter skills.
 
-## Getting Started
+✨Features
 
-This project is a starting point for a Flutter application.
+Product list (laptops & mobiles)
 
-A few resources to get you started if this is your first Flutter project:
+Product details screen
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Simple UI & navigation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+💡Tech Stack
+
+Flutter
+
+Dart
+
+
+✨Purpose
+
+Practice Flutter basics and screen navigation.
