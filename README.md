@@ -1,24 +1,30 @@
-📱💻 Flutter Store App
+Flutter Store App
 
-A simple Flutter app for a laptop & mobile store.
-Built as a practice project to improve Flutter skills.
+A simple Flutter store application for laptops and mobile phones.
 
-✨Features
+Overview
 
-Product list (laptops & mobiles)
+This app displays a list of products and allows users to view detailed information for each item.
+It is built as a practical Flutter exercise.
+
+Features
+
+Product listing (laptops & mobiles)
 
 Product details screen
 
-Simple UI & navigation
+Clean UI
+
+Screen navigation
 
 
-💡Tech Stack
+Built With
 
 Flutter
 
 Dart
 
 
-✨Purpose
+Purpose
 
-Practice Flutter basics and screen navigation.
+Practice Flutter fundamentals such as UI building and navigation between screens.
