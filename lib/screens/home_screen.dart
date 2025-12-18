@@ -74,27 +74,19 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.all(30.0),
 
                 child: Text(
-                  "Mega Store",textAlign: TextAlign.center,
+                  "Mega Store",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 22,fontWeight: FontWeight.bold
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
-            ),
-            ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text("Cart"),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("Settings"),
-            ),
+            ListTile(leading: Icon(Icons.home), title: Text("Home")),
+            ListTile(leading: Icon(Icons.shopping_cart), title: Text("Cart")),
+            ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
           ],
         ),
       ),
@@ -107,6 +99,7 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     decoration: InputDecoration(
+                      suffix: SizedBox.shrink(),
                       prefixIcon: const Icon(Icons.search),
                       hintText: "Search",
                       filled: true,
@@ -144,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                   children: const [
                     CategoryItem(icon: Icons.laptop, title: "Laptop"),
                     CategoryItem(icon: Icons.phone_android, title: "Mobile"),
-                    CategoryItem(icon: Icons.bike_scooter, title: "Bike"),
+                    CategoryItem(icon: Icons.headset_sharp, title: "HeadPhone"),
                     CategoryItem(icon: Icons.watch, title: "Watch"),
                   ],
                 ),
@@ -176,7 +169,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 120,
+                        height: 110,
                         width: double.infinity,
                         decoration: const BoxDecoration(
                           color: Color(0xFFE0E0E0),
@@ -223,9 +216,11 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.teal,
                               ),
-                            ),
+                          ),
+
                           ],
                         ),
+
                       ),
                     ],
                   ),
@@ -257,11 +252,7 @@ class CategoryItem extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  const CategoryItem({
-    super.key,
-    required this.icon,
-    required this.title,
-  });
+  const CategoryItem({super.key, required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
