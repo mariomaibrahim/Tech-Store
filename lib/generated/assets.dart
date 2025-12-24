@@ -2,6 +2,11 @@
 class Assets {
   Assets._();
 
+  static const String iconGiftBox = 'assets/icon/gift-box.png';
+  static const String iconHeadphoneSymbol = 'assets/icon/headphone-symbol.png';
+  static const String iconIphone = 'assets/icon/iphone.png';
+  static const String iconLaptop = 'assets/icon/laptop.png';
+  static const String iconSmartwatch = 'assets/icon/smartwatch.png';
   static const String imageImage1 = 'assets/image/image1.png';
   static const String imageImage2 = 'assets/image/image2.png';
   static const String imageImage3 = 'assets/image/image3.png';
