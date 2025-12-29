@@ -2,6 +2,10 @@ import 'dart:async';
 import 'package:cosmatics_shopping/screens/details.dart';
 import 'package:flutter/material.dart';
 import 'cart_screen.dart';
+import 'fav_Screen.dart';
+
+// ==================== Global List for Favorites ====================
+List<Product> favouriteProducts = [];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/image/image3_ads.png",
   ];
 
-  final List<Product> products = const [
+  // تم إزالة const عشان نقدر نعدل على isFavorite
+  final List<Product> products = [
     Product(
       name: "MacBook Pro 16-inch",
       subtitle: "Apple M2 Pro • 16GB RAM • 512GB SSD",
@@ -144,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final crossAxisCount = width < 600 ? 2 : 3;
 
     return Scaffold(
+
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.red,
         iconSize: 28,
@@ -154,16 +160,16 @@ class _HomeScreenState extends State<HomeScreen> {
             label: "Cart",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: "Settings",
+            icon: Icon(Icons.favorite_border),
+            label: "WishList",
           ),
         ],
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
+          children: [
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.grey),
               child: Center(
                 child: Text(
@@ -176,9 +182,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            ListTile(leading: Icon(Icons.home), title: Text("Home")),
-            ListTile(leading: Icon(Icons.shopping_cart), title: Text("Cart")),
-            ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
+            const ListTile(leading: Icon(Icons.home), title: Text("Home")),
+            const ListTile(leading: Icon(Icons.shopping_cart), title: Text("Cart")),
+            ListTile(
+              leading: const Icon(Icons.favorite),
+              title: const Text("Favorites"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => FavScreen()),
+                );
+              },
+            ),
+            const ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
           ],
         ),
       ),
@@ -191,6 +207,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      readOnly: true,
+                      onTap: () {
+                        showSearch(
+                          context: context,
+                          delegate: CustomSearch(products),
+                        );
+                      },
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search),
                         hintText: "Search",
@@ -306,20 +329,56 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 100,
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFE0E0E0),
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                            ),
-                            child: Image.asset(product.image, fit: BoxFit.contain),
-                          ),
+
                           Padding(
                             padding: const EdgeInsets.all(8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: double.infinity,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFE0E0E0),
+                                        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                                      ),
+                                      child: Image.asset(product.image, fit: BoxFit.contain),
+                                    ),
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            product.isFavorite = !product.isFavorite;
+                                            if (product.isFavorite) {
+                                              favouriteProducts.add(product);
+                                            } else {
+                                              favouriteProducts.remove(product);
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.9),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            product.isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: product.isFavorite ? Colors.red : Colors.grey,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
                                 Text(
                                   product.name,
                                   maxLines: 1,
@@ -340,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       "\$${product.price}",
                                       style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 15),
                                     ),
-                                   SizedBox(width: 55,),
+                                    const SizedBox(width: 55),
                                     Container(
                                       height: 30,
                                       width: 30,
@@ -403,13 +462,15 @@ class Product {
   final double price;
   final String image;
   final String description;
+  bool isFavorite;
 
-  const Product({
+  Product({
     required this.name,
     required this.subtitle,
     required this.price,
     required this.image,
     required this.description,
+    this.isFavorite = false,
   });
 }
 
@@ -441,6 +502,159 @@ class CategoryItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ==================== Custom Search Delegate ====================
+class CustomSearch extends SearchDelegate {
+  final List<Product> allProducts;
+
+  CustomSearch(this.allProducts);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: const Icon(Icons.close),
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = allProducts.where((product) {
+      final nameLower = product.name.toLowerCase();
+      final subtitleLower = product.subtitle.toLowerCase();
+      final searchLower = query.toLowerCase();
+
+      return nameLower.contains(searchLower) || subtitleLower.contains(searchLower);
+    }).toList();
+
+    return _buildSearchResults(context, results);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 80, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Search for products',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final suggestions = allProducts.where((product) {
+      final nameLower = product.name.toLowerCase();
+      final subtitleLower = product.subtitle.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return nameLower.contains(searchLower) || subtitleLower.contains(searchLower);
+    }).toList();
+
+    return _buildSearchResults(context, suggestions);
+  }
+
+  Widget _buildSearchResults(BuildContext context, List<Product> products) {
+    if (products.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 80, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'No products found',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Try searching with different keywords',
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: products.length,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, index) {
+        final product = products[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(12),
+            leading: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0E0E0),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(product.image, fit: BoxFit.contain),
+            ),
+            title: Text(
+              product.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 4),
+                Text(
+                  product.subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '\$${product.price}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              close(context, null);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ItemsDetails(product: product),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
