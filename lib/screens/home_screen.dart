@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'cart_screen.dart';
 import 'fav_Screen.dart';
 
-// ==================== Global List for Favorites ====================
 List<Product> favouriteProducts = [];
 
 class HomeScreen extends StatefulWidget {
@@ -264,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
 
-              // Indicator
+            
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
@@ -506,7 +505,7 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
-// ==================== Custom Search Delegate ====================
+
 class CustomSearch extends SearchDelegate {
   final List<Product> allProducts;
 
@@ -658,3 +657,4 @@ class CustomSearch extends SearchDelegate {
     );
   }
 }
+
